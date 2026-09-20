@@ -18,7 +18,7 @@
     "form-data": "^4.0.6",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.9.1",
-    "multer": "^2.2.0",
+    "multer": "^2.4.0",
     "nodemon": "^3.1.14",
     "razorpay": "^2.9.8",
     "svix": "^1.99.1"

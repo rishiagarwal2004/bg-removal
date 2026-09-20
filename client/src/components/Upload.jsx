@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { assets } from '../assets/assets'
+import { AppContext } from '../context/AppContext'
 
 const Upload = () => {
+  const { removeBg } = useContext(AppContext)
   return (
     <div className='pd-16'>
       <h1 className='text-center text-2xl md:text-3xl lg:text-4xl mt-4 pb-2 leading-relaxed font-semibold bg-gradient-to-r from-gray-900 to-gray-400 bg-clip-text text-transparent' >See The magic , Try Now </h1>
               <div className='text-center mb-24 mt-10'>
-                <input type="file" id="upload2" hidden />
+                <input onChange={(e => removeBg(e.target.files[0]))} type="file" accept='image/*' id="upload2" hidden />
       
                 <label
                   htmlFor="upload2"

@@ -1,9 +1,11 @@
 //creation  of header section
-import React from "react";
+import React, { useContext } from "react";
 import { assets } from "../assets/assets";
 import { TypeAnimation } from "react-type-animation";
+import { AppContext } from "../context/AppContext";
 
 const Header = () => {
+  const { removeBg } = useContext(AppContext)
   return (
     <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-12 px-6 md:px-12 lg:px-24 xl:px-36 py-10">
 
@@ -26,7 +28,7 @@ const Header = () => {
         </h1>
 
         <div>
-          <input type="file" id="upload1" hidden />
+          <input onChange={ e => removeBg(e.target.files[0])} type="file" accept ='image/*' id="upload1" hidden />
 
           <label
             htmlFor="upload1"
