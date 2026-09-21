@@ -1,5 +1,4 @@
 import axios from "axios";
-import fs from "fs";
 import FormData from "form-data";
 import userModel from "../models/userModel.js";
 
@@ -8,7 +7,10 @@ const removeBgImage = async (req, res) => {
         console.log("========== REMOVE BG ==========");
         console.log("BODY:", req.body);
         console.log("FILE:", req.file);
-        console.log("CLIPDROP KEY:", process.env.CLIPDROP_API ? "FOUND" : "NOT FOUND");
+        console.log(
+            "CLIPDROP KEY:",
+            process.env.CLIPDROP_API ? "FOUND" : "NOT FOUND"
+        );
 
         const { clerkId } = req.body;
 
@@ -50,12 +52,20 @@ const removeBgImage = async (req, res) => {
             });
         }
 
-        const imageFile = fs.createReadStream(req.file.path);
-
+        // Create form data
         const formdata = new FormData();
 
-        formdata.append("image_file", imageFile);
+        // Use buffer instead of req.file.path
+        formdata.append(
+            "image_file",
+            req.file.buffer,
+            {
+                filename: req.file.originalname,
+                contentType: req.file.mimetype
+            }
+        );
 
+        // Send image to ClipDrop
         const response = await axios.post(
             "https://clipdrop-api.co/remove-background/v1",
             formdata,
@@ -73,19 +83,23 @@ const removeBgImage = async (req, res) => {
             .toString("base64");
 
         const resultImage =
-            `data:${req.file.mimetype};base64,${base64Image}`;
+            `data:image/png;base64,${base64Image}`;
 
-        await userModel.findByIdAndUpdate(
+        // Deduct 1 credit
+        const updatedUser = await userModel.findByIdAndUpdate(
             user._id,
             {
                 creditBalance: user.creditBalance - 1
+            },
+            {
+                new: true
             }
         );
 
         return res.json({
             success: true,
             resultImage,
-            creditBalance: user.creditBalance - 1,
+            creditBalance: updatedUser.creditBalance,
             message: "Background Removed"
         });
 

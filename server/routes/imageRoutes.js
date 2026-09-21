@@ -6,7 +6,7 @@ import { removeBgImage } from '../controllers/imagecController.js';
 const imageRouter = express.Router();
 
 const upload = multer({
-    dest: 'uploads/'
+    storage: multer.memoryStorage()
 });
 
 imageRouter.post(
